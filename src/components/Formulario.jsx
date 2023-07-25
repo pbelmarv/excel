@@ -19,11 +19,13 @@ const Formulario = () => {
 
     return (
         <div className="flex-1 bg-white rounded-lg shadow-xl md:my-10 mx-10">
-            <h1 className="text-4xl text-center text-indigo-700">Excel</h1>
+            <h1 className="text-4xl text-center text-green-700">
+                Leer archivos Excel
+            </h1>
             <hr></hr>
             <form>
                 <div className="w-4/5 p-4">
-                    <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                    <label className="flex justify-center w-full h-32 px-4 transition-color bg-white border-2 border-gray-300 border-dashed appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
                         <span className="flex items-center space-x-2">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -56,28 +58,46 @@ const Formulario = () => {
                 </div>
             </form>
             <hr></hr>
-            <div>
+            <div className="p-4">
                 {data.length > 0 ? (
-                    <table className="table-fixed">
-                        <thead>
+                    <table className="min-w-full text-left text-sm font-light">
+                        <thead className="border-b font-medium dark:border-neutral-500 bg-slate-500 text-white cursor-pointer">
                             <tr>
                                 {Object.keys(data[0]).map((key) => (
-                                    <th key={key}>{key}</th>
+                                    <th
+                                        scope="col"
+                                        key={key}
+                                        className="px-6 py-4"
+                                    >
+                                        {key}
+                                    </th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {data.map((row, index) => (
-                                <tr key={index}>
+                                <tr
+                                    key={index}
+                                    className="border-b transition duration-300 ease-in-out hover:bg-neutral-400 hover:text-white dark:border-neutral-500 dark:hover:bg-neutra cursor-pointer"
+                                >
                                     {Object.values(row).map((value, index) => (
-                                        <td key={index}>{value}</td>
+                                        <td
+                                            key={index}
+                                            className=" whitespace-nowrap px-6 py-4 font-medium"
+                                        >
+                                            {value}
+                                        </td>
                                     ))}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 ) : (
-                    "Ho existen datos para mostrar"
+                    <div className="text-orange-400 text-3xl text-center">
+                        <p className=" text-green-700 py-10">
+                            Debe seleccionar un archivo (Xlsx o Xls)
+                        </p>
+                    </div>
                 )}
             </div>
         </div>
