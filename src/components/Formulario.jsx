@@ -1,25 +1,19 @@
-import { useState, useEffect } from "react";
-import { read } from "xlsx";
-import Papa from "papaparse";
+import { useState } from "react";
+import * as XLSX from "xlsx";
 
 const Formulario = () => {
-    const [cargando, setCargando] = useState(false);
+    const [data, setData] = useState([]);
 
     const handleFileChange = (e) => {
-        const file = e.target.file[0];
         const reader = new FileReader();
-
-        reader.onload = (event) => {
-            const data = event.target.result;
+        reader.readAsBinaryString(e.target.files[0]);
+        reader.onload = (e) => {
+            const data = e.target.result;
             const libro = XLSX.read(data, { type: "binary" });
-
-            const encabezado = libro.SheetNames[0];
-            const sheet = libro.Sheets[encabezado];
-
-            const csv = XLSX.utils.sheet_to_csv(libro);
-            const resultado = Papa.parse(csv, { header: true });
-
-            console.log(resultado.data);
+            const nombreHoja = libro.SheetNames[0];
+            const hoja = libro.Sheets[nombreHoja];
+            const parseData = XLSX.utils.sheet_to_json(hoja);
+            setData(parseData);
         };
     };
 
@@ -29,16 +23,63 @@ const Formulario = () => {
             <hr></hr>
             <form>
                 <div className="w-4/5 p-4">
-                    <label htmlFor="excel" className="mb-5">
-                        Seleccione archivo Excel
+                    <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                        <span className="flex items-center space-x-2">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                                />
+                            </svg>
+                            <span className="font-medium text-gray-600">
+                                Arrastre los archivos, o{" "}
+                                <span className="text-blue-600 underline">
+                                    Seleccione
+                                </span>
+                            </span>
+                            <input
+                                type="file"
+                                className="hidden"
+                                accept=".xlsx, .xls"
+                                onChange={handleFileChange}
+                            />
+                        </span>
                     </label>
-                    <input
-                        type="file"
-                        className="w-full"
-                        onChange={(e) => handleFileChange}
-                    />
                 </div>
             </form>
+            <hr></hr>
+            <div>
+                {data.length > 0 ? (
+                    <table className="table-fixed">
+                        <thead>
+                            <tr>
+                                {Object.keys(data[0]).map((key) => (
+                                    <th key={key}>{key}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((row, index) => (
+                                <tr key={index}>
+                                    {Object.values(row).map((value, index) => (
+                                        <td key={index}>{value}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    "Ho existen datos para mostrar"
+                )}
+            </div>
         </div>
     );
 };
