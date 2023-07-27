@@ -5,6 +5,7 @@ const Formulario = () => {
     const [data, setData] = useState([]);
 
     const handleFileChange = (e) => {
+        e.preventDefault();
         const reader = new FileReader();
         reader.readAsBinaryString(e.target.files[0]);
         reader.onload = (e) => {
@@ -18,9 +19,9 @@ const Formulario = () => {
     };
 
     return (
-        <div className="flex-1 bg-white rounded-lg shadow-xl md:my-10 mx-10">
+        <div className="md:flex-1 bg-white rounded-lg shadow-xl my-10 mx-10">
             <h1 className="text-4xl text-center text-green-700">
-                Leer archivos Excel
+                Lector de archivos Excel
             </h1>
             <hr></hr>
             <form>
@@ -42,9 +43,9 @@ const Formulario = () => {
                                 />
                             </svg>
                             <span className="font-medium text-gray-600">
-                                Arrastre los archivos, o{" "}
-                                <span className="text-blue-600 underline">
-                                    Seleccione
+                                <span className="text-blue-600 underline no-underline text-2xl text-gray-500">
+                                    {" "}
+                                    Seleccione un archivo Excel
                                 </span>
                             </span>
                             <input
